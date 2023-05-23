@@ -10,9 +10,22 @@ axes.spines.bottom: True
 
 # Box plot styles
 boxplot.boxprops.linewidth: 1.5       # boxplot edge line width
+boxplot.capprops.color: 0.2
+boxplot.capprops.linewidth: 1.5
+boxplot.flierprops.markeredgecolor: 0.2
+boxplot.flierprops.markeredgewidth: 1.5
+boxplot.showmeans: True
+boxplot.meanprops.color: 0.2
+boxplot.meanprops.linewidth: 1.5
+boxplot.meanprops.marker: s
+boxplot.meanprops.markeredgecolor: 0.2
+boxplot.meanprops.markerfacecolor: none
+boxplot.meanprops.markersize: 8.0
 boxplot.medianprops.linewidth: 2.5    # boxplot median line width
+boxplot.medianprops.color: 0.2
 boxplot.whiskerprops.linestyle: :
 boxplot.whiskerprops.linewidth: 1.5
+boxplot.whiskerprops.color: 0.2
 
 # Grid style
 axes.grid: true                 # display grid or not
