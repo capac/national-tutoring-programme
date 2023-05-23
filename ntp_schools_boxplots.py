@@ -3,9 +3,15 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from pathlib import Path
 
-work_dir = Path.home() / 'Programming/Python/data-visualization/'
-data_dir = work_dir / 'national-tuition-programme/ntp_2022-23/data/'
+plt.style.use('boxplot-style.mplstyle')
+
+# data directory
+main_data_dir = Path.home() / 'Programming/data/'
+data_dir = main_data_dir / 'national-tutoring-programme_22-23/data/'
 data_file = data_dir / 'ntp_delivery_data_2023-04-12.csv'
+
+main_work_dir = Path.home() / 'Programming/Python/data-visualization/'
+work_dir = main_work_dir / 'national-tutoring-programme_22-23'
 
 ntp_df = pd.read_csv(data_file, na_values='-')
 regions = list(ntp_df['region_name'][ntp_df['region_name'].notnull()].unique())
@@ -24,44 +30,34 @@ for reg in regions:
     region_list.append(data)
 
 # colormap
-color_list = ['navy', 'blue', 'royalblue', 'deepskyblue',
-              'limegreen', 'yellowgreen', 'gold', 'darkorange',
-              'red', 'crimson', 'darkviolet', 'indigo',]
+color_list = ['#A6CEE3', '#1F78B4', '#B2DF8A', '#33A02C',
+              '#FB9A99', '#E31A1C', '#FDBF6F', '#FF7F00',
+              '#CAB2D6', '#6A3D9A', '#FFD700', '#B15928']
 cmap = mpl.colors.ListedColormap(color_list)
 colors = cmap.colors
 
 # boxplot
-fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(9, 7))
-for dt, col, ax, color in zip(region_list, regions, axes.flatten(), colors):
-    bplot = ax.boxplot(dt['percentage_schools_participating'], widths=0.25,
-                       patch_artist=True)
+fig, axes = plt.subplots(nrows=3, ncols=3)
+for dt, col, color, ax in zip(region_list, regions, colors, axes.flatten()):
+    bplot = ax.boxplot(dt['percentage_schools_participating'],
+                       widths=0.25, patch_artist=True)
     ax.set_xticks([])
-    ax.set_xlabel(col.title(), fontsize=11)
-    ax.set_ylabel('Percentage (%)', fontsize=11)
-    ax.grid(linestyle=':')
-    for tick in ax.get_yticklabels():
-        tick.set_rotation(90)
-        tick.set_verticalalignment('center')
+    ax.set_xlabel(col.title())
+    ax.set_ylabel('Percentage (%)')
     for patch in bplot['boxes']:
         patch.set_facecolor(color)
         patch.set_edgecolor('0.2')
-        patch.set_linewidth(1.5)
-        patch.set_alpha(0.8)
-    for whisker in bplot['whiskers']:
-        whisker.set_color('0.2')
-        whisker.set_linewidth(1.5)
-        whisker.set_linestyle(':')
-    for fliers in bplot['fliers']:
-        fliers.set_markerfacecolor('1.0')
-        fliers.set_markeredgecolor('0.0')
-    for median in bplot['medians']:
-        median.set_color('0.2')
-        median.set_linewidth(2.5)
-    for caps in bplot['caps']:
-        caps.set_color('0.2')
-        caps.set_linewidth(1.5)
+        patch.set_alpha(0.95)
+
+# set source text
+ax.text(x=0.08, y=0.01,
+        s='''Source: "National Tutoring Programme 2022/23 Academic year" '''
+        '''via the UK Department for Education (DfE). ''',
+        transform=fig.transFigure,
+        ha='left', fontsize=11, alpha=0.7)
+
 fig.suptitle('Percentage of local authorities schools in the NTP, '
-             'grouped by regions of England', fontsize=13)
-fig.tight_layout()
-fig.savefig('ntp_schools_boxplot.png', dpi=288,
-            bbox_inches='tight')
+             'grouped by regions of England', fontsize=20, fontweight='bold',)
+
+fig.subplots_adjust(top=0.92)
+fig.savefig(work_dir / 'plots/ntp_schools_boxplot.png')
